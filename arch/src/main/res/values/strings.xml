@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update">升级</string>
+    <string name="install">安装</string>
+    <string name="ignore">忽略此版本</string>
+    <string name="update_title">是否升级到%s版本，大小%sMB？</string>
+</resources>
