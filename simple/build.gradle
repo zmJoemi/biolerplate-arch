@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id 'kotlin-parcelize'
 }
 
 android {
-    namespace 'dev.joemi.arch'
+    namespace 'dev.joemi.simple'
     compileSdk 34
 
     defaultConfig {
@@ -18,7 +19,14 @@ android {
     }
 
     buildTypes {
+
+        debug{
+            buildConfigField "String", "BASE_URL", "\"https://v.api.aa1.cn/\""
+        }
+
         release {
+            buildConfigField "String", "BASE_URL", "\"https://v.api.aa1.cn/\""
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -32,6 +40,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
@@ -45,4 +54,19 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
+
+    implementation project(':arch')
+
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation "com.squareup.okio:okio:3.7.0"
+    implementation('com.google.code.gson:gson:2.11.0')
+    implementation('com.squareup.retrofit2:retrofit:2.11.0')
+    implementation('com.squareup.retrofit2:converter-gson:2.11.0')
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 }

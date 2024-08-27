@@ -15,22 +15,36 @@ public final class DataResult<T> {
     @Nullable
     private final String message;
 
-    public DataResult(@Nullable T data, boolean isSuccess, @Nullable String message) {
-        this.data = data;
+    public DataResult(boolean isSuccess, @Nullable String message, @Nullable T data) {
         this.isSuccess = isSuccess;
         this.message = message;
+        this.data = data;
     }
 
     public static <T> DataResult<T> createWithSuccess(T data) {
-        return new DataResult<>(data, true, "");
+        return new DataResult<>(true, "", data);
     }
 
-    public static <T> DataResult<T> createWithFailure(T data) {
-        return new DataResult<>(data, false, "");
+    public static <T> DataResult<T> createWithFailure(String message) {
+        return new DataResult<>(false, message, null);
     }
 
     public static <T> DataResult<T> createWithStatus(boolean isSuccess, String message) {
-        return new DataResult<>(null, isSuccess, message);
+        return new DataResult<>(isSuccess, message, null);
+    }
+
+    @Nullable
+    public T getData() {
+        return data;
+    }
+
+    @Nullable
+    public String getMessage() {
+        return message;
+    }
+
+    public boolean isSuccess() {
+        return isSuccess;
     }
 
     @NonNull

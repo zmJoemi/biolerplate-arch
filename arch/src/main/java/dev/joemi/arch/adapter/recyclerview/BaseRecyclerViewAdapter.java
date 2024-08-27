@@ -29,8 +29,8 @@ public abstract class BaseRecyclerViewAdapter<M, B extends ViewBinding> extends 
         this.mContext = context;
         this.mLayoutInflater = LayoutInflater.from(context);
         this.mOnClickListener = v -> {
-            if (mOnItemClickListener != null) {
-                int position = (int) v.getTag(R.id.list_item_position);
+            int position = (int) v.getTag(R.id.list_item_position);
+            if (mOnItemClickListener != null && position != RecyclerView.NO_POSITION) {
                 mOnItemClickListener.onItemClick(v, getItem(position), position);
             }
         };
@@ -41,7 +41,6 @@ public abstract class BaseRecyclerViewAdapter<M, B extends ViewBinding> extends 
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         B binding = getViewBinding(mLayoutInflater, parent, viewType);
         BaseBindingViewHolder holder = new BaseBindingViewHolder(binding);
-        holder.itemView.setTag(R.id.list_item_position, holder.getAdapterPosition());
         ClickUtils.applySingleDebouncing(holder.itemView, this.mOnClickListener);
         return holder;
     }
@@ -49,14 +48,16 @@ public abstract class BaseRecyclerViewAdapter<M, B extends ViewBinding> extends 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         BaseBindingViewHolder _holder = (BaseBindingViewHolder) holder;
+        _holder.itemView.setTag(R.id.list_item_position, position);
+
         //noinspection unchecked
         B binding = (B) _holder.getBinding();
         this.onBindItem(binding, getItem(position), holder);
     }
 
-    protected abstract @NonNull B getViewBinding(LayoutInflater from, ViewGroup parent, int viewType);
+    protected abstract @NonNull B getViewBinding(@NonNull LayoutInflater layoutInflater, ViewGroup parent, int viewType);
 
-    protected abstract void onBindItem(B binding, M item, RecyclerView.ViewHolder holder);
+    protected abstract void onBindItem(@NonNull B binding, @NonNull M item, RecyclerView.ViewHolder holder);
 
     public void setOnItemClickListener(OnItemClickListener<M> listener) {
         mOnItemClickListener = listener;
@@ -76,6 +77,6 @@ public abstract class BaseRecyclerViewAdapter<M, B extends ViewBinding> extends 
     }
 
     public interface OnItemClickListener<M> {
-        void onItemClick(View itemView, M item, int position);
+        void onItemClick(View itemView, @NonNull M item, int position);
     }
 }
